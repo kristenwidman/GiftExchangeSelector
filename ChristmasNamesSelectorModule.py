@@ -6,6 +6,7 @@ import random
 
 class GiverReceiverPair(object):
     '''Class to hold a pair of giver and receiver.
+        Note that receiver can be a list of receivers.
     '''
     def __init__(self, giver, receiver):
         self.giver = giver
@@ -58,13 +59,15 @@ class ChristmasNamesSelector(object):
 
 
     def select_two_christmas_names(self,name_list):
+        '''For use in 2012 - each person/couple gives gifts to 2 other people/couples.
+        '''
         giver_list = list(name_list)
         receiver_dict = {}
         for receiver in name_list:
             receiver_dict[receiver] = 0
         list_of_g_r_objects = []
         for name in giver_list:
-            if ((len(receiver_dict) > 2) or (len(receiver_dict) == 2 and name not in receiver_dict)): #!= receiver_dict[0][0] and name != receiver_dict[1][0])):
+            if ((len(receiver_dict) > 2) or (len(receiver_dict) == 2 and name not in receiver_dict)):
                 giver_receiver = self._select_two_names(name, receiver_dict.keys())
                 for receiver in giver_receiver.receiver:
                     receiver_dict[receiver] += 1
@@ -76,6 +79,7 @@ class ChristmasNamesSelector(object):
         return list_of_g_r_objects
 
     def _select_two_names(self, giver, receiver_list):
+        '''for 2012'''
         receivers = list(receiver_list) #so that the original list can be used in recursion if checks fail
         receiver1 = random.choice(receivers)
         receivers.remove(receiver1)

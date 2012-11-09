@@ -5,7 +5,7 @@ class EmailFolks(object):
 
     def format_email(self,giver,receiver,wish_list=False):
         """Takes a giver and receiver names as input.
-            Sends an email to each giver with the name of the person
+            Formats email parameters for each giver with the name of the person
             they are giving a gift to (receiver)
         """
         address_dictionary = {'Jeff and Kristen': ['kristenwidman@gmail.com','jeff@jeffwidman.com'],
@@ -25,6 +25,8 @@ class EmailFolks(object):
             self._send_email(from_address,to_address,subject,text)
 
     def _send_email(self, from_address, to_address, subject, text):
+        '''Actually sends the emails
+        '''
         body = string.join((
             "From: %s" % from_address,
             "To: %s" % to_address,
@@ -43,6 +45,8 @@ class EmailFolks(object):
         server.quit()
 
     def get_wishlist(self, receiver):
+        '''Used when each person supplies a wishlist.
+        '''
         wish_list_text = self.get_wish_list_text(receiver)
         text = "Here is his/her wish list: \n\n" + wish_list_text
 

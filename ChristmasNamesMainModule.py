@@ -20,6 +20,7 @@ def main():
     if len(args) != 1:
         print 'usage: python test.py nameList'
         sys.exit(-1)'''
+
     selector = s.ChristmasNamesSelector()
     name_list = ['Rob and Linda','Jeff and Kristen','Michelle and Ryan','Brad','Carla']
     giver_receiver_match_list = selector.select_two_christmas_names(name_list)
