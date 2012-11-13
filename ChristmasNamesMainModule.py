@@ -1,12 +1,14 @@
 import sys
 import ChristmasNamesSelectorModule as s
 import EmailModule
+import datetime
 
 def print_to_outfile(text):
     """prints results of selection to a text file in case someone forgets
         who they should be giving to.
     """
-    file_for_appending = "2012Results.txt"  #change this every year
+    current_year = datetime.datetime.now().year
+    file_for_appending = "%sResults.txt" %(current_year) #change this every year
     outfile = open(file_for_appending, 'a')
     outfile.write(text)
     outfile.close()
