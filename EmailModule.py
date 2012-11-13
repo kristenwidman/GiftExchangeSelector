@@ -1,5 +1,6 @@
 import smtplib
 import string
+from address_list import address_list_test
 
 class EmailFolks(object):
 
@@ -8,11 +9,7 @@ class EmailFolks(object):
             Formats email parameters for each giver with the name of the person
             they are giving a gift to (receiver)
         """
-        address_dictionary = {'Jeff and Kristen': ['kristenwidman@gmail.com','jeff@jeffwidman.com'],
-                                'Michelle and Ryan': ['thetruthwillsetyoufree@gmail.com','ryan@ryanheathers.com'],
-                                'Brad': ['brad.widman@gmail.com'],
-                                'Rob and Linda': ['widmans@gmail.com'],
-                                'Carla': ['carla.widman@gmail.com']}
+        address_dictionary = address_list_test
         host = "localhost"
         subject = "Widman family Christmas gift selection"
         to_address_list = address_dictionary[giver]
