@@ -3,7 +3,7 @@
 # Christmas name selector
 
 import random
-from address_list import exclude_list
+from constants import exclude_list, DEBUG
 
 class GiverReceiverPair(object):
     '''Class to hold a pair of giver and receiver.
@@ -29,8 +29,8 @@ class ChristmasNamesSelector(object):
         '''
         receiver = random.choice(receiver_list)
         if (giver != receiver):       # giver cannot be same as receiver
-            giver_receiver_pair = GiverReceiverPair(giver,receiver)
-            return giver_receiver_pair
+            giver_receiver_dict = {giver: receiver}
+            return giver_receiver_dict
         else:
             return self._select_one_name(giver, receiver_list)
 
@@ -42,15 +42,15 @@ class ChristmasNamesSelector(object):
         '''
         giver_list = list(name_list)
         receiver_list = list(name_list)
-        list_of_pair_objects = []
+        list_of_pair_dicts = []
         for name in giver_list:
             if ((len(receiver_list) > 1) or (name != receiver_list[0])):
-                giver_receiver = self._select_one_name(name, receiver_list)
-                receiver_list.remove(giver_receiver.receiver)
-                list_of_pair_objects.append(giver_receiver)
+                giver_receiver_dict = self._select_one_name(name, receiver_list)
+                receiver_list.remove(giver_receiver[giver])
+                list_of_pair_dicts.append(giver_receiver_dict)
             else:
-                list_of_pair_objects = self.select_christmas_names(name_list)
-        return list_of_pair_objects
+                list_of_pair_dicts = self.select_christmas_names(name_list)
+        return list_of_pair_dicts
 
     def print_pairs(self, giver_receiver_pairs):
         '''Method to print the generated giver/receiver pairs.
@@ -58,16 +58,30 @@ class ChristmasNamesSelector(object):
             Returns nothing.
         '''
         for pair in giver_receiver_pairs:
-            print pair.giver + " : " + repr(pair.receiver) + '\n'
+            print pair.keys()," : ",pair.values(),'\n'
         return
 
-    def check_for_conflicts(self, g_r_list):
+    def _check_for_preferences(self, g_r_list):
+        '''For inclusion of people who would like to give to one another.
+            Format for this list is a dictionary with tuple keys and list values
+            i.e. {("Rob","Linda"): ["Jeff and Kristen", "Michelle and Ryan", "Carla", "Brad"]}
+        '''
+        givers = None
+
+
+        givers_tuple = preferences.keys()
+        receivers_list = preferences.values()[0].sort()
+        for dictionary in g_r_list:
+            if dictionary.keys()[0] in givers_tuple[0]:
+
+
+    def _check_for_conflicts(self, g_r_list):
         '''For inclusion of a list of people who should not be giving to each other
         '''
-        for giver_receiver in g_r_list:
-            if giver_receiver.giver in exclude_list:
-                for receiver in giver_receiver.receiver:
-                    if receiver in exclude_list:
+        for dictionary in g_r_list:
+            if dictionary.keys()[0] in exclude_list:
+                for value in dictionary.values()[0]:
+                    if value in exclude_list:
                         return False
         return True
 
@@ -78,20 +92,20 @@ class ChristmasNamesSelector(object):
         receiver_dict = {}
         for receiver in name_list:
             receiver_dict[receiver] = 0
-        list_of_g_r_objects = []
-        for name in giver_list:
-            if ((len(receiver_dict) > 3) or (len(receiver_dict) == 2 and name not in receiver_dict)):
-                giver_receiver = self._select_two_names(name, receiver_dict.keys())
-                for receiver in giver_receiver.receiver:
+        list_of_g_r_dicts = []
+        for giver in giver_list:
+            if ((len(receiver_dict) > 3) or (len(receiver_dict) == 2 and giver not in receiver_dict)):
+                giver_receiver_dict = self._select_two_names(giver, receiver_dict.keys())
+                for receiver in giver_receiver_dict[giver]:
                     receiver_dict[receiver] += 1
                     if receiver_dict[receiver] > 1:
                         del receiver_dict[receiver]
-                list_of_g_r_objects.append(giver_receiver)
+                list_of_g_r_dicts.append(giver_receiver_dict)
             else:
                 return self.select_two_christmas_names(name_list)
         #added below check people who should NOT be giving to each other
-        if self.check_for_conflicts(list_of_g_r_objects):
-            return list_of_g_r_objects
+        if self._check_for_conflicts(list_of_g_r_dicts):
+            return list_of_g_r_dicts
         else:
             return self.select_two_christmas_names(name_list)
 
@@ -103,7 +117,7 @@ class ChristmasNamesSelector(object):
         receiver2 = random.choice(receivers)
         receiver_picks = [receiver1, receiver2]
         if (giver not in receiver_picks):   # giver cannot be same as receiver
-            giver_receiver_match = GiverReceiverPair(giver,receiver_picks)
+            giver_receiver_match = {giver: receiver_picks}
             return giver_receiver_match
         else:
             return self._select_two_names(giver, receiver_list)
