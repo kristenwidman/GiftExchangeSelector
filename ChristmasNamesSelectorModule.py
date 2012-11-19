@@ -3,7 +3,7 @@
 # Christmas name selector
 
 import random
-from address_list import exclude_list
+from constants import exclude_list, preferences, DEBUG
 
 class GiverReceiverPair(object):
     '''Class to hold a pair of giver and receiver.
@@ -61,7 +61,28 @@ class ChristmasNamesSelector(object):
             print pair.giver + " : " + repr(pair.receiver) + '\n'
         return
 
-    def check_for_conflicts(self, g_r_list):
+    def _check_for_preferences(self, g_r_list):
+        '''Allows requests for a person/people to give to specific people.
+            Format of preferences is like:
+            [{("Rob","Linda"): ["Jeff and Kristen", "Michelle and Ryan", "Carla", "Brad"]}]
+        '''
+        for dictionary in preferences:
+            givers_expected = dictionary.keys()[0]  #tuple
+            receivers_expected = dictionary.values()[0]
+            receivers_expected.sort()
+            receivers_actual = []
+            for giver_receiver in g_r_list:
+                if giver_receiver.giver in givers_expected:
+                    receivers_actual += giver_receiver.receiver
+            if DEBUG: print 'receivers wanted for givers ' + repr(givers_expected) + ' are ' + repr(receivers_expected)
+            receivers_actual.sort()
+            if DEBUG: print 'receivers actual for these givers: '+ repr(receivers_actual)
+            if receivers_actual == receivers_expected:
+                if DEBUG: print 'receiver lists match!'
+                return True
+            else: return False
+
+    def _check_for_conflicts(self, g_r_list):
         '''For inclusion of a list of people who should not be giving to each other
         '''
         for giver_receiver in g_r_list:
@@ -89,8 +110,8 @@ class ChristmasNamesSelector(object):
                 list_of_g_r_objects.append(giver_receiver)
             else:
                 return self.select_two_christmas_names(name_list)
-        #added below check people who should NOT be giving to each other
-        if self.check_for_conflicts(list_of_g_r_objects):
+        #added below check people who should NOT be giving to each other and who SHOULD be giving certain others
+        if self._check_for_conflicts(list_of_g_r_objects) and self._check_for_preferences(list_of_g_r_objects):
             return list_of_g_r_objects
         else:
             return self.select_two_christmas_names(name_list)
