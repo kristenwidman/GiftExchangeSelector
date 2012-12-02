@@ -1,4 +1,4 @@
-#This project is for doing secret santa style name selection for gift exchanges.#
+#Secret-Santa style name selection for gift exchanges.#
 Note that this project is currently optimized for Widman family Christmas 2012.
 It is not (yet) written to be fully general, so many parameters and methods
 may be unclear.
@@ -20,6 +20,7 @@ and EmailModule.py
     username and password for a gmail address to send emails from,
     and a DEBUG = False line:
     Format:
+
         address_list = {'name': ['email@gmail.com','otheremail@gmail.com'],
                     'second-name': ['nextemail@gmail.com'], ...}
 
