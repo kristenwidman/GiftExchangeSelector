@@ -19,7 +19,6 @@ and EmailModule.py
     an optional list for people who want to give to each other,
     username and password for a gmail address to send emails from,
     and a DEBUG = False line:
-    Format:
 
         address_list = {'name': ['email@gmail.com','otheremail@gmail.com'],
                     'second-name': ['nextemail@gmail.com'], ...}
