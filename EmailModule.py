@@ -1,6 +1,6 @@
 import smtplib
 import string
-from constants import address_list, address_list_test, DEBUG
+from constants import address_list, address_list_test, DEBUG, email_username, email_password
 
 class EmailFolks(object):
 
@@ -33,8 +33,8 @@ class EmailFolks(object):
             text
             ), "\r\n")
         #credentials
-        username = 'widmanChristmasNames'
-        password = 'WidmanChristmas'
+        username = email_username
+        password = email_password
 
         server = smtplib.SMTP('smtp.gmail.com:587')  #specific for gmail (I think)
         server.starttls()
