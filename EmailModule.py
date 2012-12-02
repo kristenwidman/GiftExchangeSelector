@@ -15,7 +15,7 @@ class EmailFolks(object):
         subject = "Widman family Christmas gift selection"
         to_address_list = address_dictionary[giver]
         from_address = "widmanChristmasNames@gmail.com"
-        text = "Take 2. THIS is the official email for presents for 2012. Christmas name selection for Widman Family Christmas. You (" + giver + ") are giving presents to " + repr(receiver) + ". Be thoughtful! "
+        text = "Christmas name selection for Widman Family Christmas. You (" + giver + ") are giving presents to " + repr(receiver) + ". Be thoughtful! "
         if wish_list:
             text.append(get_wishlist(receiver))
         for to_address in to_address_list:
