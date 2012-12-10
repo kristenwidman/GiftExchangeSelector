@@ -56,7 +56,7 @@ class ChristmasNamesSelector(object):
                 list_of_pair_objects.append(giver_receiver)
             else:
                 return self.select_christmas_names(name_list)
-        if self._check_for_conflicts(list_of_pair_objects):# and self._check_for_preferences(list_of_pair_objects):
+        if self._check_for_conflicts(list_of_pair_objects) and self._check_for_preferences(list_of_pair_objects):
             if DEBUG: print 'Check succeeded!'
             return list_of_pair_objects
         else:
@@ -78,6 +78,7 @@ class ChristmasNamesSelector(object):
             [{("Rob","Linda"): ["Jeff and Kristen", "Michelle and Ryan", "Carla", "Brad"]}]
         '''
         #this will need rework to make more general
+        if DEBUG: print 'checking for preferences'
         for dictionary in preferences:
             givers_expected = dictionary.keys()[0]  #tuple
             receivers_expected = dictionary.values()[0]
@@ -91,8 +92,10 @@ class ChristmasNamesSelector(object):
             if DEBUG: print 'receivers actual for these givers: '+ repr(receivers_actual)
             if receivers_actual == receivers_expected:
                 if DEBUG: print 'receiver lists match!'
-                return True
-            else: return False
+            else:
+                if DEBUG: print 'preferences check failed'
+                return False
+        return True
 
     def _check_for_conflicts(self, g_r_list):
         '''For inclusion of a list of people who should not be giving to each other
