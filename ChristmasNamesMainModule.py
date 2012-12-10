@@ -29,14 +29,14 @@ def main():
     if DEBUG: name_list = address_list_test.keys()
     else: name_list = address_list.keys()
     if DEBUG: print 'name list: ', name_list  #DEBUG only
-    giver_receiver_match_list = selector.select_christmas_names(name_list)
+    giver_receiver_match_list = selector.select_christmas_names(name_list, 1)
     if DEBUG: selector.print_pairs(giver_receiver_match_list)  # DEBUG only
     print_to_outfile("Giver : Receiver\n")
     emailer = EmailModule.EmailFolks()
     for match in giver_receiver_match_list:
-        if not DEBUG:
-            emailer.format_email(match.giver, match.receiver)
-            print_to_outfile(match.giver + " : " + repr(match.receiver) + "\n")
+        #if not DEBUG:
+        emailer.format_email(match.giver, match.receiver)
+        print_to_outfile(match.giver + " : " + repr(match.receiver) + "\n")
 
 if __name__ == '__main__':
     main()
