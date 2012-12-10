@@ -2,15 +2,15 @@ import sys
 import ChristmasNamesSelectorModule as s
 import EmailModule
 import datetime
-from constants import address_list, address_list_test, DEBUG
+from constants import address_list, address_list_test, DEBUG, last_name
 
 def print_to_outfile(text):
     """prints results of selection to a text file in case someone forgets
         who they should be giving to.
     """
     current_year = datetime.datetime.now().year
-    if DEBUG: file_for_appending = "%sResults_test.txt" %(current_year)
-    else: file_for_appending = "%sResults.txt" %(current_year)
+    if DEBUG: file_for_appending = "%s%sResults_test.txt" % (current_year, last_name)
+    else: file_for_appending = "%s%sResults.txt" %(current_year, last_name)
     outfile = open(file_for_appending, 'a')
     outfile.write(text)
     outfile.close()
@@ -29,14 +29,14 @@ def main():
     if DEBUG: name_list = address_list_test.keys()
     else: name_list = address_list.keys()
     if DEBUG: print 'name list: ', name_list  #DEBUG only
-    giver_receiver_match_list = selector.select_two_christmas_names(name_list)
+    giver_receiver_match_list = selector.select_christmas_names(name_list)
     if DEBUG: selector.print_pairs(giver_receiver_match_list)  # DEBUG only
     print_to_outfile("Giver : Receiver\n")
     emailer = EmailModule.EmailFolks()
     for match in giver_receiver_match_list:
-        #if not DEBUG:
-        emailer.format_email(match.giver, match.receiver)
-        print_to_outfile(match.giver + " : " + repr(match.receiver) + "\n")
+        if not DEBUG:
+            emailer.format_email(match.giver, match.receiver)
+            print_to_outfile(match.giver + " : " + repr(match.receiver) + "\n")
 
 if __name__ == '__main__':
     main()

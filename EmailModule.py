@@ -1,6 +1,6 @@
 import smtplib
 import string
-from constants import address_list, address_list_test, DEBUG, email_username, email_password
+from constants import address_list, address_list_test, DEBUG, email_username, email_password, last_name
 
 class EmailFolks(object):
 
@@ -12,10 +12,10 @@ class EmailFolks(object):
         if DEBUG: address_dictionary = address_list_test
         else: address_dictionary = address_list
         host = "localhost"
-        subject = "Widman family Christmas gift selection"
+        subject = ("%s family Christmas gift selection") % last_name
         to_address_list = address_dictionary[giver]
         from_address = "widmanChristmasNames@gmail.com"
-        text = "Christmas name selection for Widman Family Christmas. You (" + giver + ") are giving presents to " + repr(receiver) + ". Be thoughtful! "
+        text = ("Christmas name selection for %s Family Christmas. You (%s) are giving presents to %s. Be thoughtful! ") % (last_name, giver, repr(receiver))
         if wish_list:
             text.append(get_wishlist(receiver))
         for to_address in to_address_list:

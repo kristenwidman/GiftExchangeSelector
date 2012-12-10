@@ -3,7 +3,7 @@
 # Christmas name selector
 
 import random
-from constants import exclude_list, preferences, DEBUG
+from constants import exclude, preferences, DEBUG
 
 class GiverReceiverPair(object):
     '''Class to hold a pair of giver and receiver.
@@ -29,6 +29,7 @@ class ChristmasNamesSelector(object):
         '''
         receiver = random.choice(receiver_list)
         if (giver != receiver):       # giver cannot be same as receiver
+            receiver = [receiver]
             giver_receiver_pair = GiverReceiverPair(giver,receiver)
             return giver_receiver_pair
         else:
@@ -41,16 +42,26 @@ class ChristmasNamesSelector(object):
             to empty and calls itself again.
         '''
         giver_list = list(name_list)
-        receiver_list = list(name_list)
+        receiver_dict = {}
         list_of_pair_objects = []
+        for receiver in name_list:
+            receiver_dict[receiver] = 0
         for name in giver_list:
-            if ((len(receiver_list) > 1) or (name != receiver_list[0])):
-                giver_receiver = self._select_one_name(name, receiver_list)
-                receiver_list.remove(giver_receiver.receiver)
+            if ((len(receiver_dict) > 1) or (len(receiver_dict) == 1 and name not in receiver_dict)):
+                giver_receiver = self._select_one_name(name, receiver_dict.keys())
+                for receiver in giver_receiver.receiver:
+                    receiver_dict[receiver] += 1
+                    if receiver_dict[receiver] > 0:
+                        del receiver_dict[receiver]
                 list_of_pair_objects.append(giver_receiver)
             else:
-                list_of_pair_objects = self.select_christmas_names(name_list)
-        return list_of_pair_objects
+                return self.select_christmas_names(name_list)
+        if self._check_for_conflicts(list_of_pair_objects):# and self._check_for_preferences(list_of_pair_objects):
+            if DEBUG: print 'Check succeeded!'
+            return list_of_pair_objects
+        else:
+            if DEBUG: print 'Check failed. Repeating'
+            return self.select_christmas_names(name_list)
 
     def print_pairs(self, giver_receiver_pairs):
         '''Method to print the generated giver/receiver pairs.
@@ -66,6 +77,7 @@ class ChristmasNamesSelector(object):
             Format of preferences is like:
             [{("Rob","Linda"): ["Jeff and Kristen", "Michelle and Ryan", "Carla", "Brad"]}]
         '''
+        #this will need rework to make more general
         for dictionary in preferences:
             givers_expected = dictionary.keys()[0]  #tuple
             receivers_expected = dictionary.values()[0]
@@ -85,10 +97,14 @@ class ChristmasNamesSelector(object):
     def _check_for_conflicts(self, g_r_list):
         '''For inclusion of a list of people who should not be giving to each other
         '''
+        if DEBUG: print 'checking for conflicts'
         for giver_receiver in g_r_list:
-            if giver_receiver.giver in exclude_list:
+            if giver_receiver.giver in exclude:
+                #if DEBUG: print 'giver %s is in exclude list'%(giver_receiver.giver)
                 for receiver in giver_receiver.receiver:
-                    if receiver in exclude_list:
+                    #if DEBUG: print 'receiver ', receiver
+                    if receiver in exclude[giver_receiver.giver]:
+                        if DEBUG: print 'giver %s cannot give to receiver %s. Running again.'%(giver_receiver.giver, receiver)
                         return False
         return True
 
@@ -101,7 +117,7 @@ class ChristmasNamesSelector(object):
             receiver_dict[receiver] = 0
         list_of_g_r_objects = []
         for name in giver_list:
-            if ((len(receiver_dict) > 3) or (len(receiver_dict) == 2 and name not in receiver_dict)):
+            if ((len(receiver_dict) > 2) or (len(receiver_dict) == 2 and name not in receiver_dict)):
                 giver_receiver = self._select_two_names(name, receiver_dict.keys())
                 for receiver in giver_receiver.receiver:
                     receiver_dict[receiver] += 1
